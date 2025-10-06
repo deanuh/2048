@@ -37,8 +37,8 @@ python3 main.py --no-color
 - r — Restart (new game with two starting tiles)
 - q — Quit
 
-## What I learned (short):
+## What I learned:
 
 - Separating game mechanics (slide/merge) from I/O (render/input) made the code easier to test and reason about.
-- Enforcing single-merge-per-move is most reliable with the compact → merge-once → pad pattern.
-- Injecting a seeded RNG (--seed) made debugging and grading reproducible across machines.
+- Enforcing single-merge-per-move is most reliable with the compact then merge-once then pad pattern.
+- Injecting a seeded RNG (--seed) made debugging reproducible across machines.
