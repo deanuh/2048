@@ -249,41 +249,52 @@ def play(seed: int | None, use_color: bool):
     behavior stays deterministic within a single run when `--seed` is provided.
     """
     rng = random.Random(seed)
+    initial_rng_state = rng.getstate() 
     board = Board(rng)
+
+    def restart_seeded():
+            nonlocal board
+            if seed is not None:
+                rng.setstate(initial_rng_state)  # rewind RNG to program-start
+                board = Board(rng)               # rebuild: identical initial layout
+            else:
+                board.restart()
+
 
     while True:
         clear_screen()
-        print(f"{BOLD if use_color else ''}2048 — Tiny (Turn‑Based){RESET if use_color else ''}")
-        print("Controls: WASD or arrows = move • r = restart • q = quit")
+        label = "Controls: WASD or arrows = move • r = restart"
+        if seed is not None:
+            label += " (seeded)"
+        label += " • q = quit"
+        print(f"{BOLD if use_color else ''}2048 — Tiny (Turn-Based){RESET if use_color else ''}")
+        print(label)
         if seed is not None:
             print(f"Deterministic mode seed = {seed}")
         print()
         print(board.render(use_color))
         print(f"Score: {board.score}")
 
-        # End‑state: no empties and no adjacent equals
         if not board.has_moves():
             print(BOLD + "\nGame over! Press r to restart, q to quit." + (RESET if use_color else ""))
             cmd = read_command()
             if cmd == "r":
-                board.restart()
+                restart_seeded()
                 continue
             if cmd == "q":
                 break
             continue
 
         cmd = read_command()
-        if cmd in ("w", "a", "s", "d"):
-            result = board.move(cmd)
-            # if illegal no change, do nothing 
+        if cmd in ("w","a","s","d"):
+            board.move(cmd)
             continue
         elif cmd == "r":
-            board.restart()
+            restart_seeded()
             continue
         elif cmd == "q":
             break
         else:
-            # ignore unknown input
             continue
 
 

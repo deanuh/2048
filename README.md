@@ -29,6 +29,10 @@ python3 main.py --seed 42
 
 # disable ANSI colors if your terminal renders oddly
 python3 main.py --no-color
+
+Unit-style checks:
+    python3 test_seed.py
+    # prints: All deterministic tests passed.
 ```
 ## Controls:
 
